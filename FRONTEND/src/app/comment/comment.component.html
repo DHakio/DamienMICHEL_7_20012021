@@ -1,1 +1,22 @@
-<p>comment works!</p>
+<div class="d-flex mb-3">
+    <a [routerLink]="['/profile', comment.UserId]" class="col-md-2 d-flex flex-column align-items-center justify-content-center">
+        <img src="assets/avatar.svg" alt="avatar" height="50rem">
+        <p class="mb-0">{{ comment.User.first_name }} {{ comment.User.name }}</p>
+    </a>
+    <div *ngIf="!toggleUpdate" class="card p-3">
+        <p>{{ comment.content }} <small class="edited" *ngIf="edited">(modifié le {{ edited | date : 'dd/MM/yy à H:mm' }})</small></p>
+        <small>Posté le {{ comment.createdAt | date : 'dd/MM/yy à H:mm'}} 
+            <span *ngIf="selfOrAdmin">
+                <button class="text-warning" (click)="onToggleUpdate()">Modifier</button> - <button class="text-danger" (click)="onDelete()">Supprimer</button>
+            </span>
+        </small>
+    </div> 
+    <div *ngIf="toggleUpdate && selfOrAdmin" class="card p-3">
+        <form [formGroup]="commentForm" (keydown)="onPressEnter($event)">
+            <label for="inputContent" class="visually-hidden">Commentaire</label>
+            <input class="w-100 mb-3" id="inputContent" type="text" formControlName="content">
+            <br>
+            <small>Posté le {{ comment.createdAt | date : 'dd/MM/yy à H:mm'}} <button class="text-danger" (click)="onToggleUpdate()">Annuler</button> - <button type="submit" class="text-success" (click)="onSubmit()">Enregistrer</button></small>
+        </form>  
+    </div>
+</div>

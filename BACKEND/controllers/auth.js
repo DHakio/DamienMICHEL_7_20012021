@@ -27,11 +27,11 @@ exports.signup = (request, response, next) => {
                 return response.status(201).json({message: "Utilisateur bien enregistré !"})
             })
             .catch(error => {
-                return response.status(400).json({error : error.message});
+                return response.status(400).json(error.errors[0]);
             });
         })
         .catch(error => {
-            return response.status(400).json({error: error.message});
+            return response.status(400).json(error);
         });
 }
 
@@ -56,10 +56,17 @@ exports.login = (request, response, next) => {
                     if(!isValid) {
                         return response.status(401).json({error: 'Mot de pass incorrect'});
                     }
-                    return response.status(200).json({
-                        userId: user.id,
-                        token: jwt.sign({userId: user._id}, ENCODING_KEY, {expiresIn: '12h'})
-                    });
+                    models.Admin.findOne({where: {UserId: user.id}})
+                        .then(admin => {
+                            let isAdmin = admin ? true : false;
+                            return response.status(200).json({
+                                userId: user.id,
+                                admin: isAdmin,
+                                token: jwt.sign({userId: user.id, admin: isAdmin}, ENCODING_KEY, {expiresIn: '12h'})
+                            });
+
+                        })
+                        .catch(error => response.status(500).json({error: error.message}))
                 })
                 .catch(error => {
                     return response.status(500).json({error: error.message});

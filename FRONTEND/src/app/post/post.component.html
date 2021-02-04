@@ -1,0 +1,65 @@
+<h1 class="text-center" *ngIf="error">{{ error }}</h1>
+
+<div *ngIf="post && post !== undefined && !error">
+    <a [routerLink]="['/profile', post.User.id]" class="col-md-2 d-flex flex-column justify-content-around align-items-center w-100 mb-4 mt-4">
+        <img src="assets/avatar.svg" alt="avatar" height="100rem">
+        <p class="mb-0">{{ post.User.name | uppercase }} {{ post.User.first_name }}</p>
+    </a>
+
+    <div class="card text-center mb-3" *ngIf="!toggleUpdate">
+        <!-- SHOW POST -->
+        <div class="card-header d-flex flex-column">
+            <h1 class="h3">{{ post.title }}</h1>
+            <div class="d-flex justify-content-center col-md-12" *ngIf="selfOrAdmin">
+                <p class="text-success col-md-1 mb-0">
+                    <span class="pointer text-warning" (click)="onToggleUpdate()"> Modifier</span>
+                </p>
+                <p class="text-danger col-md-1 mb-0">
+                    <span class="pointer text-danger" (click)="onDelete()">Supprimer</span>
+                </p>
+            </div>
+
+        </div>
+        <div class="card-body">
+          <pre class="card-text">{{ post.content }}</pre>
+        </div>
+        <div class="card-footer text-muted">
+            <small>Posté le {{ post.createdAt | date : 'dd/MM/yy à H:mm'}} <span class="edited" *ngIf="edited">(Modifié le {{ edited | date : 'dd/MM/yy à H:mm'}})</span></small>
+        </div>
+    </div>
+
+    <div class="card text-center mb-3" *ngIf="toggleUpdate && selfOrAdmin">
+        <!-- SHOW POST UPDATE FORM -->
+        <form [formGroup]="postForm">
+            <div class="card-header d-flex flex-column">
+                <label for="inputTitle" class="visually-hidden">Titre</label>
+                <input class="h3 w-100 text-center" type="text" formControlName="title">
+                <div class="d-flex justify-content-center col-md-12">
+                    <p class="text-success col-md-1 mb-0">
+                        <span class="pointer text-danger" (click)="onToggleUpdate()"> Annuler</span>
+                    </p>
+                    <p class="text-danger col-md-1 mb-0">
+                        <span class="pointer text-success" (click)="onSubmit()">Enregistrer</span>
+                    </p>
+                </div>
+            </div>
+            <div class="card-body">
+                <textarea class="w-100" rows="15" formControlName="content">
+                </textarea>
+            </div>
+            <div class="card-footer text-muted">
+                <small>Posté le {{ post.createdAt | date : 'dd/MM/yy à H:mm'}}</small>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <app-addComment></app-addComment>
+        <div class="p-5">
+            <h2 class="h4 mt-4 mb-5">Commentaires ({{post.Comments.length}}) :</h2>
+            <p *ngIf="post.Comments.length < 1">Aucun commentaire n'a été posté.</p>
+            <app-comment *ngFor="let comment of post.Comments; let index" [comment]="comment"></app-comment>
+        </div>
+    </div>
+</div>
+

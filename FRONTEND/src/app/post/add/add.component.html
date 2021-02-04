@@ -1,0 +1,13 @@
+<div class="container">
+    <form [formGroup]="addPostForm">
+        <h1 class="h3 mb-3 text-center">Nouveau Post</h1>
+
+        <label for="inputTitle" class="mb-2"><h2 class="h4">Titre du post</h2></label>
+        <input type="text" id="inputTitle" class="form-control mb-4" placeholder="Mon super titre" formControlName="title" required autofocus>
+
+        <label for="inputContent"><h2 class="h4">Contenu du post</h2></label>
+        <textarea class="form-control mb-4" id="inputContent" rows="10" formControlName="content"></textarea>
+
+        <button class="btn btn-lg btn-dark" type="submit" [disabled]="addPostForm.invalid" (click)="onSubmit()">Enregistrer</button>
+    </form>
+</div>

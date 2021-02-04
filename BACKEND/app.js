@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const authRoutes = require('./routes/auth');
-const topicRoutes = require('./routes/topic');
+const postRoutes = require('./routes/post');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 const commentRoutes = require('./routes/comment');
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/topic', topicRoutes);
+app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 
 module.exports = app;

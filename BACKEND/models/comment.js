@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     static associate(models) {
       models.Comment.belongsTo(models.User);
-      models.Comment.belongsTo(models.Topic);
+      models.Comment.belongsTo(models.Post);
     }
   };
   Comment.init({
     content: DataTypes.STRING,
     UserId: DataTypes.INTEGER,
-    TopicId: DataTypes.INTEGER
+    PostId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Comment',

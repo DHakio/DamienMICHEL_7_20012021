@@ -1,0 +1,22 @@
+<p class="text-center w-100" *ngIf="posts && posts.length < 1">Rien n'a encore été posté... Sois le premier, <u class="text-primary pointer" routerLink="/create-post">créer un post</u> !</p>
+
+<a *ngFor="let post of posts" class="pointer card mb-3 p-2" style="height:10rem" [routerLink]="['/post/', post.id]">
+    <div class="row g-0 h-100">
+        <div class="col-md-2 d-flex flex-column justify-content-around align-items-center">
+            <img src="assets/avatar.svg" alt="avatar" height="100rem">
+            <p class="mb-0">{{ post.User.name }} {{ post.User.first_name }}</p>
+        </div>
+        <div class="col-md-10 h-100">
+            <div class="card-body w-100">
+                <h5 class="card-title"> {{ post.title }} </h5>
+                <p class="card-text w-100">{{ post.content | slice:0:290 }}...</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        Posté le {{ post.createdAt | date : 'dd/MM/yy à H:mm'}} -
+                        <u>{{ post.Comments.length }} commentaires</u>
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</a>

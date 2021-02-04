@@ -1,1 +1,26 @@
-<p>signup works!</p>
+<div class="form-signin">
+    <form class="text-center" [formGroup]="signupForm">
+      <img class="" src="assets/icon-above-font.svg" alt="groupomania logo" width="150" height="150">
+
+      <h1 class="h3 mb-3 fw-normal">Inscription</h1>
+
+      <label for="inputName" class="visually-hidden">Nom de famille</label>
+      <input type="text" id="inputName" class="form-control" placeholder="Nom de famille" formControlName="name" required autofocus>
+
+      <label for="inputFirstName" class="visually-hidden">Prénom</label>
+      <input type="text" id="inputFirstName" class="form-control" placeholder="Prénom" formControlName="first_name" required autofocus>
+
+      <label for="inputEmail" class="visually-hidden">Adresse Email</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Adresse email" formControlName="email" required autofocus>
+
+      <label for="inputPassword" class="visually-hidden">Mot de passe</label>
+      <input type="password" id="inputPassword" class="form-control mt-3" placeholder="Mot de passe" formControlName="password" required autofocus>
+
+      <label for="inputPasswordConfirm" class="visually-hidden">Confirmer mot de passe</label>
+      <input type="password" id="inputPasswordConfirm" class="form-control mb-3" placeholder="Confirmer mot de passe" formControlName="password_confirm" required autofocus>
+
+      <p class="text-danger" *ngIf="error">{{ error }}</p>
+
+      <button class="w-100 btn btn-lg btn-dark" type="submit" [disabled]="signupForm.invalid" (click)="onSignup()">Valider l'inscription</button>
+    </form>
+  </div>

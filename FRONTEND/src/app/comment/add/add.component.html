@@ -1,1 +1,6 @@
-<p>add works!</p>
+<form class="d-flex flex-column" [formGroup]="commentForm">
+    <label for="inputComment" class="mt-4 mb-4 h4 text-center">Envoyez un commentaire ! </label>
+    <input class="form-control mb-1" id="inputComment" formControlName="content" required autofocus>
+    <button class="btn btn-lg btn-dark" type="submit" [disabled]="commentForm.invalid" (click)="onSubmit()">Envoyer</button>
+    <p *ngIf="success" class="text-center">Votre commentaire a bien été envoyé !</p>
+</form>

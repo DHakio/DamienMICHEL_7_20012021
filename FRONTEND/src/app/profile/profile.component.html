@@ -1,1 +1,21 @@
-<p>profile works!</p>
+<div *ngIf="user">
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <img class="card-img-top" style="width: 18rem;" src="assets/avatar.svg" alt="avatar de {{ user.first_name }}">
+        <h1 class="text-center my-3 h1" *ngIf="!toggleUpdate">{{ user.first_name | titlecase }} {{ user.name | uppercase }}</h1>
+        <form [formGroup]="profileForm" *ngIf="toggleUpdate" class="d-flex my-3">
+            <label for="inputFirstName" class="visually-hidden"></label>
+            <input class="form-control" id="inputFirstName" formControlName="first_name">
+            <label for="inputName" class="visually-hidden"></label>
+            <input class="form-control" id="inputName" formControlName="name">
+        </form>
+    </div>
+    <div class="d-flex justify-content-center" *ngIf="selfOrAdmin">
+        <div style="width: 12rem" class="d-flex justify-content-between">
+            <button class="btn btn-warning" (click)="onToggleUpdate()" *ngIf="!toggleUpdate">Modifier</button>
+            <button class="btn btn-danger" (click)="onDelete()" *ngIf="!toggleUpdate">Supprimer</button>
+
+            <button class="btn btn-success" (click)="onSubmit()" *ngIf="toggleUpdate">Enregistrer</button>
+            <button class="btn btn-danger" (click)="onToggleUpdate()" *ngIf="toggleUpdate">Annuler</button>
+        </div> 
+    </div>    
+</div>

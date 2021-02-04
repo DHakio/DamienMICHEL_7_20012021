@@ -6,13 +6,13 @@ module.exports = (request, response, next) => {
         const decoded = jwt.verify(token, ENCODING_KEY);
         const userId = decoded.userId;
         if(request.body.userId && request.body.userId !== userId) {
-            throw 'ID utilisateur invalide';
+            response.status(401).json({error: "Mauvaise identification"});
         }
         else {
             next();
         }
     }
     catch {
-        response.status(401).json({error: new Error('Requête invalide')});
+        response.status(401).json({error: "Vous devez être identifié"});
     }
 }

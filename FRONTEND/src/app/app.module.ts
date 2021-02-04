@@ -7,11 +7,15 @@ import { ConnexionComponent } from './auth/connexion/connexion.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { IndexComponent } from './index/index.component';
 import { ProfileComponent } from './profile/profile.component';
-import { TopicComponent } from './topic/topic.component';
-import { AddComponent } from './topic/add/add.component';
+import { PostComponent } from './post/post.component';
+import { AddPostComponent } from './post/add/add.component';
 import { CommentComponent } from './comment/comment.component';
 import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
+import { PostListComponent } from './post/list/list.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { addCommentComponent } from './comment/add/add.component';
+import { AuthInterceptor } from './interceptor/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -20,17 +24,26 @@ import { FooterComponent } from './footer/footer.component';
     SignupComponent,
     IndexComponent,
     ProfileComponent,
-    TopicComponent,
-    AddComponent,
+    PostComponent,
+    AddPostComponent,
     CommentComponent,
     HeaderComponent,
-    FooterComponent
+    PostListComponent,
+    addCommentComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+    }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
