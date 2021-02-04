@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '../models/User.model';
@@ -22,15 +23,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profileForm: FormGroup;
 
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private auth: AuthService, private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private route: ActivatedRoute, 
+              private userService: UserService, 
+              private auth: AuthService, 
+              private router: Router, 
+              private formBuilder: FormBuilder, 
+              private titleService: Title) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: any) => {
         this.userSubscription = this.userService.userSubject.subscribe(
           (user: User[]) => {
-
             this.user = user[0];
+            this.titleService.setTitle(`Groupomania - Profile de ${this.user.first_name} ${this.user.name}`);
             if(this.auth.getUserId() == params.id || this.auth.getIsAdmin() == true) {
               this.selfOrAdmin = true;
             }

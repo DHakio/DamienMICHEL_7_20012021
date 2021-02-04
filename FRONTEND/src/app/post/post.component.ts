@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post } from '../models/Post.model';
@@ -22,7 +23,12 @@ export class PostComponent implements OnInit, OnDestroy {
   edited: Date;
   selfOrAdmin: boolean = false;
 
-  constructor(private postService: PostService, private route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router, private auth: AuthService) { }
+  constructor(private postService: PostService, 
+              private route: ActivatedRoute, 
+              private formBuilder: FormBuilder, 
+              private router: Router, 
+              private auth: AuthService, 
+              private titleService: Title) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
@@ -30,6 +36,8 @@ export class PostComponent implements OnInit, OnDestroy {
         this.postSubscription = this.postService.postSubject.subscribe(
           post => {
             this.post = post[0];
+
+            this.titleService.setTitle("Groupomania - " + this.post.title);
 
             this.postForm = this.formBuilder.group({
               title: [null, Validators.required],

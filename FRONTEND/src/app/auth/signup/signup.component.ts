@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { passwordConfirm } from 'src/app/validators/passwordConfirm.validator';
@@ -14,9 +15,12 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   error: string;
 
-  constructor(private formBuilder: FormBuilder, private auth: AuthService, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private auth: AuthService, private router: Router, private titleService: Title) { }
 
   ngOnInit(): void {
+
+    this.titleService.setTitle("Groupomania - Inscription");
+
     this.signupForm = this.formBuilder.group({
       name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],
       first_name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],

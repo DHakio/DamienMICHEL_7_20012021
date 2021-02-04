@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Post } from 'src/app/models/Post.model';
 import { PostService } from 'src/app/services/post.service';
@@ -14,11 +15,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   postSubscription: Subscription;
   error: string;
 
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService, private titleService: Title) { }
 
   ngOnInit(): void {
     this.postSubscription = this.postService.postSubject.subscribe(
       posts => {
+        this.titleService.setTitle("Groupomania - Derniers posts");
         this.posts = posts;
         this.error = null;
       },

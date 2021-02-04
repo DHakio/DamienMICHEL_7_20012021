@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -13,9 +14,12 @@ export class ConnexionComponent implements OnInit {
   connexionForm: FormGroup;
   error: string;
 
-  constructor(private formBuilder: FormBuilder, private auth: AuthService, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private auth: AuthService, private router: Router, private titleService: Title) { }
 
   ngOnInit(): void {
+
+    this.titleService.setTitle("Groupomania - Connexion");
+
     this.connexionForm = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email]],
       password: [null, Validators.required]

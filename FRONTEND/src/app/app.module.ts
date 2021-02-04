@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,9 +13,10 @@ import { CommentComponent } from './comment/comment.component';
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './post/list/list.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addCommentComponent } from './comment/add/add.component';
 import { AuthInterceptor } from './interceptor/auth-interceptor';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -29,15 +30,19 @@ import { AuthInterceptor } from './interceptor/auth-interceptor';
     CommentComponent,
     HeaderComponent,
     PostListComponent,
-    addCommentComponent
+    addCommentComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule.forRoot([])
   ],
   providers: [
+    Title,
     {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
