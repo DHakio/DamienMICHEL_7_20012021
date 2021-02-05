@@ -3,7 +3,7 @@ const models  = require('../models');
 
 exports.create = (request, response, next) => {
     // Request : {title: String, content: String, user_id: Integer}
-    // Response : {message: String, post: Post}
+    // Response : Post
     
     let title = request.body.title;
     let content = request.body.content;
@@ -18,13 +18,13 @@ exports.create = (request, response, next) => {
         content: content,
         UserId: user_id
     })
-        .then(post => response.status(200).json({message: "Post créé avec succès !", post}))
-        .catch(error => response.status(500).json({error: error.message}))
+        .then(post => response.status(200).json(post))
+        .catch(error => response.status(500).json(error))
 }
 
 exports.getAll = (request, response, next) => {
     // Request : null
-    // Response : Array
+    // Response : Post[]
 
     models.Post.findAll({
         order: [['id', 'DESC']],
@@ -33,13 +33,13 @@ exports.getAll = (request, response, next) => {
             models.Comment
         ]
         })
-        .then(posts => response.status(200).json({posts}))
-        .catch(error => response.status(500).json({error: error.message}));
+        .then(posts => response.status(200).json(posts))
+        .catch(error => response.status(500).json(error));
 }
 
 exports.getOne = (request, response, next) => {
     // Request : null
-    // Response : {post: Post[]}
+    // Response : Post
 
     let post_id = request.params.id
 
@@ -54,13 +54,13 @@ exports.getOne = (request, response, next) => {
             {model: models.Comment, include: {model: models.User, attributes: ['id', 'name', 'first_name']}}
         ]
     })
-        .then(post => response.status(200).json({post: [post]}))
-        .catch(error => response.status(500).json({error: error.message}));
+        .then(post => response.status(200).json(post))
+        .catch(error => response.status(500).json(error));
 }
 
 exports.update = (request, response, next) => {
     // Request : {title: String?, content: String?}
-    // Response : {post: Post}
+    // Response : Post
 
     let post_id = request.params.id;
 
@@ -74,21 +74,21 @@ exports.update = (request, response, next) => {
                 if(request.body.title != "" && request.body.content != "") {
                     models.Post.update({ ...request.body },{ where: {id: post_id }})
                     .then(post => {
-                        return response.status(200).json({post: post})
+                        return response.status(200).json(post)
                     })
                     .catch(error => {
-                        return response.status(500).json({error: error.message})
+                        return response.status(500).json(error)
                     });
                 }
                 else {
-                    return response.status(400).json({message: "Un des parametres est vide"})
+                    return response.status(400).json("Un des parametres est vide")
                 }  
             }
             else {
-                return response.status(403).json({message: "Accès refusé."})
+                return response.status(403).json("Accès refusé.")
             }
         })
-        .catch(error => response.status(500).json({error: error.message}));
+        .catch(error => response.status(500).json(error));
 }
 
 exports.delete = (request, response, next) => {
@@ -106,11 +106,11 @@ exports.delete = (request, response, next) => {
             if(check == "admin" || check == "self") {
                 models.Post.destroy({where: {id: post_id}})
                     .then(() => response.status(200).json({message: "Post supprimé avec succès"}))
-                    .catch(error => response.status(500).json({error: error.message}))
+                    .catch(error => response.status(500).json(error))
             }
             else {
-                return response.status(401).json({error: "Accès refusé."})
+                return response.status(401).json("Accès refusé.")
             }
         })
-        .catch(error => response.status(500).json({error: error.message}));
+        .catch(error => response.status(500).json(error));
 }

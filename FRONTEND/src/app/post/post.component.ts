@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,6 @@ import { PostService } from '../services/post.service';
   styleUrls: ['./post.component.scss']
 })
 export class PostComponent implements OnInit, OnDestroy {
-
 
   post: Post;
   error: string;
@@ -34,9 +33,8 @@ export class PostComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(
       params => {
         this.postSubscription = this.postService.postSubject.subscribe(
-          post => {
-            this.post = post[0];
-
+          (post: Post) => {
+            this.post = post;
             this.titleService.setTitle("Groupomania - " + this.post.title);
 
             this.postForm = this.formBuilder.group({
@@ -52,17 +50,16 @@ export class PostComponent implements OnInit, OnDestroy {
               this.selfOrAdmin = true;
             }
           },
-          error => this.error = JSON.stringify(error)
+          (error: any) => this.error = JSON.stringify(error)
         )
         this.postService.getOne(params.id);
       },
-      error => {
-        this.error = JSON.stringify(error);
-      }
+      error => this.error = JSON.stringify(error)
     );
   }
 
   public async onSubmit() {
+
     const title = this.postForm.get('title').value;
     const content = this.postForm.get('content').value;
 
@@ -79,7 +76,7 @@ export class PostComponent implements OnInit, OnDestroy {
   
   public async onDelete() {
     this.postService.delete(this.post.id)
-      .then(() => {this.router.navigate(['']);})
+      .then(() => this.router.navigate(['']))
       .catch(() => this.error = "Une erreur est survenue")
   }
 

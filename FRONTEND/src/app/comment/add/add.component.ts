@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PostService } from 'src/app/services/post.service';
 
 @Component({
@@ -23,12 +23,9 @@ export class addCommentComponent implements OnInit {
     )
 
     this.route.params.subscribe(
-      params => {
-        this.post_id = params.id;
-      },
-      error => {
-        this.error = JSON.stringify(error);
-      }
+      params => this.post_id = params.id,
+      error => this.error = JSON.stringify(error)
+      
     )
   }
 

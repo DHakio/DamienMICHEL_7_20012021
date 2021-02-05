@@ -19,7 +19,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.postSubscription = this.postService.postSubject.subscribe(
-      posts => {
+      (posts: Post[]) => {
         this.titleService.setTitle("Groupomania - Derniers posts");
         this.posts = posts;
         this.error = null;

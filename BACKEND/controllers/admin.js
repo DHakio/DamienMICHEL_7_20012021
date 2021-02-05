@@ -4,7 +4,7 @@ const models = require('../models');
 
 exports.create = (request, response, next) => {
     // Request : null
-    // Response : {message: String}
+    // Response : Admin
     let user_id = request.params.id;
 
     if(user_id == null || isNaN(user_id) ) {
@@ -15,16 +15,14 @@ exports.create = (request, response, next) => {
         .then(check => {
             if(check == "admin") {
                 models.Admin.create({ UserId: user_id })
-                    .then(() => {
-                        return response.status(200).json({message: "Admin rajouté avec succès"}); 
-                    })
-                    .catch(error => response.status(500).json({message: error.message}))
+                    .then(admin => response.status(200).json(admin))
+                    .catch(error => response.status(500).json(error))
             }
             else {
-                return response.status(403).json({message: "Accès refusé"});
+                return response.status(403).json({error: "Accès refusé"});
             }
         })
-        .catch(error => response.status(500).json({message: error.message}))
+        .catch(() => response.status(403).json({error: "Accès refusé"}))
 }
 
 exports.delete = (request, response, next) => {
@@ -33,7 +31,7 @@ exports.delete = (request, response, next) => {
     let user_id = request.params.id;
 
     if(user_id == null || isNaN(user_id) ) {
-        return response.status(400).json({message: "Aucun ID n'a été envoyé"})
+        return response.status(400).json({error: "Aucun ID n'a été envoyé"})
     }
 
     selfOrAdmin(request)
@@ -43,29 +41,28 @@ exports.delete = (request, response, next) => {
                     .then(() => {
                         response.status(200).json({message: "Admin supprimé avec succès"});
                     })
-                    .catch(error => response.status(500).json({message: error.message}))
+                    .catch(error => response.status(500).json(error))
             }
             else {
-                return response.status(403).json({message: "Accès refusé"});
+                return response.status(403).json({error: "Accès refusé"});
             }
         })
-        .catch(error => response.status(500).json({message: error.message}))
+        .catch(error => response.status(500).json(error))
 }
 
 exports.isAdmin = (request, response, next) => {
     // Request : null
     // Response : {isAdmin: boolean}
     let user_id = request.params.id;
-    let isAdmin = false;
 
     if(user_id == null || isNaN(user_id) ) {
-        return response.status(400).json({message: "Aucun ID n'a été envoyé"})
+        return response.status(400).json({error: "Aucun ID n'a été envoyé"})
     }
 
     models.Admin.findOne({where: {UserId: user_id}})
         .then(admin => {
-            if(admin) {isAdmin = true;}
-            response.status(200).json({isAdmin: isAdmin});
+            let isAdmin = admin ? admin : false;
+            response.status(200).json(isAdmin);
         })
-        .catch(error => response.status(500).json({message: error.message}));
+        .catch(error => response.status(500).json(error));
 }

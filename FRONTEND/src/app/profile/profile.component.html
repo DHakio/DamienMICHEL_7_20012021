@@ -9,9 +9,13 @@
             <input class="form-control" id="inputName" formControlName="name">
         </form>
     </div>
-    <div class="d-flex justify-content-center" *ngIf="selfOrAdmin">
+    <div class="d-flex justify-content-center" *ngIf="self || admin">
         <div>
-            <div *ngIf="!toggleUpdate" style="width: 12rem" class="d-flex justify-content-between">
+            <div *ngIf="!toggleUpdate" [ngStyle]="{'width':(admin && !self) ? '20rem' : '12rem' }" class="d-flex justify-content-between">
+                <div *ngIf="admin">
+                    <button class="btn btn-success"(click)="onPromoteAdmin()" *ngIf="!user.admin">Promouvoir</button>
+                    <button class="btn btn-danger" (click)="onRemoveAdmin()" *ngIf="user.admin && !self">Retrograder</button>
+                </div>
                 <button class="btn btn-warning" (click)="onToggleUpdate()">Modifier</button>
                 <button class="btn btn-danger" (click)="onDelete()">Supprimer</button>
             </div>

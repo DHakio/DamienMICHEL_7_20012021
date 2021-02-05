@@ -49,11 +49,17 @@ export class SignupComponent implements OnInit {
             this.error = "Cette adresse email existe déjà !"
           }
           else {
-            console.log(error)
-            this.error = "Une erreur est survenue"
+            if(error.status == 0 || error.status == 500) {
+              this.error = "Problème de connexion au serveur"
+            }
+            else if(error.status == 401)  {
+                this.error = "Identifiants incorrectes"
+            }
+            else {
+              this.error = "Une erreur est survenue"
+            }
           }
         })
     }
-
   }
 }

@@ -33,8 +33,17 @@ export class ConnexionComponent implements OnInit {
     if(this.connexionForm.valid) {
       this.auth.login(email, password)
         .then(() => {this.router.navigate(['index'])})
-        .catch(() => this.error = "Identifiants incorrectes")
+        .catch((error: any) => {
+          if(error.status == 0 || error.status == 500) {
+            this.error = "Problème de connexion au serveur"
+          }
+          else if(error.status == 401)  {
+              this.error = "Identifiants incorrectes"
+          }
+          else {
+            this.error = "Une erreur est survenue"
+          }
+        });
     }
-
   }
 }

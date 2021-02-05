@@ -3,7 +3,7 @@ const models  = require('../models');
 
 exports.create = (request, response, next) => {
     // Request : {content: String, post_id: Integer, user_id: Integer}
-    // Response : {message: String}
+    // Response : Post.id: Number
     
     let content = request.body.content;
     let post_id = request.body.post_id;
@@ -18,8 +18,8 @@ exports.create = (request, response, next) => {
         PostId: post_id,
         UserId: user_id
     })
-        .then(comment => response.status(200).json({message: "Commentaire créé avec succès !"}))
-        .catch(error => response.status(500).json({error: error.message}))
+        .then(comment => response.status(200).json(comment.PostId))
+        .catch(error => response.status(500).json(error))
 }
 
 exports.getAll = (request, response, next) => {
@@ -27,8 +27,8 @@ exports.getAll = (request, response, next) => {
     // Response : {comments: Array}
 
     models.Comment.findAll()
-        .then(comments => response.status(200).json({comments: comments}))
-        .catch(error => response.status(500).json({error: error.message}));
+        .then(comments => response.status(200).json(comments))
+        .catch(error => response.status(500).json(error));
 }
 
 exports.getOne = (request, response, next) => {
@@ -43,12 +43,12 @@ exports.getOne = (request, response, next) => {
 
     models.Comment.findOne({ where: {id: comment_id}})
         .then(comment => response.status(200).json({comment: comment}))
-        .catch(error => response.status(500).json({error: error.message}));
+        .catch(error => response.status(500).json(error));
 }
 
 exports.update = (request, response, next) => {
-    // Request : {content: String?}
-    // Response : {message: String}
+    // Request : {message: String}
+    // Response : Post.id: Number
 
     let comment_id = request.params.id;
 
@@ -60,16 +60,16 @@ exports.update = (request, response, next) => {
         .then(check => {
             if(check == "admin" || check == "self") {
                 models.Comment.update({ ...request.body },{ where: {id: comment_id }})
-                    .then(() => response.status(200).json({message: "Commentaire modifié avec succès"}))
-                    .catch(error => response.status(500).json({error: error.message}));
+                    .then(comment => response.status(200).json(comment.PostId))
+                    .catch(error => response.status(500).json(error));
             }
         })
-        .catch(error => response.status(500).json({error: error.message}));
+        .catch(error => response.status(500).json(error));
 }
 
 exports.delete = (request, response, next) => {
     // Request : null
-    // Response : {Message: String}
+    // Response : Post.id: Number
     
     let comment_id = request.params.id;
 
@@ -80,10 +80,15 @@ exports.delete = (request, response, next) => {
     selfOrAdmin(request, "Comment")
         .then(check => {
             if(check == "admin" || check == "self") {
-                models.Comment.destroy({where: { id: comment_id}})
-                    .then(() => response.status(200).json({message: "Commentaire supprimé avec succès"}))
-                    .catch(error => response.status(500).json({error: error.message}))
+                models.Comment.findOne({where: {id: comment_id}})
+                    .then(comment => {
+                        models.Comment.destroy({where: { id: comment_id}})
+                            .then(() => response.status(200).json(comment.PostId))
+                            .catch(error => response.status(500).json(error))
+                    })
+                    .catch(error => response.status(500).json(error))
+                
             }
         })
-        .catch(error => response.status(500).json({error: error.message}));
+        .catch(error => response.status(500).json(error));
 }

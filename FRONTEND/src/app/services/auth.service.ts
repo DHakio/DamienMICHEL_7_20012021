@@ -22,9 +22,7 @@ export class AuthService {
         (response: {message: string}) => {
           resolve(response);
         },
-        error => {
-          reject(error);
-        }
+        (error: any) => reject(error)
       )
     })
   }
@@ -44,9 +42,9 @@ export class AuthService {
   public async adminCheck(id: number) {
     return new Promise((resolve, reject) => {
       this.http.get('http://localhost:3000/api/admin/check/' + id).subscribe(
-        (data: {isAdmin: boolean}) => {
-          this.isAdmin = data.isAdmin;
-          resolve(data.isAdmin)
+        (data: boolean) => {
+          this.isAdmin = data;
+          resolve(data)
         },
         (error: any) => reject(error)
       )
@@ -61,10 +59,9 @@ export class AuthService {
           this.authToken = data.token;
           this.isAdmin = data.admin;
           this.isAuthSubject.next(true);
+          resolve({message: "Connexion réussie"})
         },
-        error => {
-          reject(error);
-        }
+        (error: any) => reject(error)
       )
     })
   }

@@ -18,10 +18,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userSubscription: Subscription
   error: string;
   user: User;
-  selfOrAdmin: boolean = false;
-  toggleUpdate: boolean = false;
+  self: boolean;
+  admin: boolean;
+  toggleUpdate: boolean;
   profileForm: FormGroup;
-
 
   constructor(private route: ActivatedRoute, 
               private userService: UserService, 
@@ -34,22 +34,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(
       (params: any) => {
         this.userSubscription = this.userService.userSubject.subscribe(
-          (user: User[]) => {
-            this.user = user[0];
+          (user: User) => {
+            this.user = user;
+            this.admin = this.auth.getIsAdmin();
+            this.self = this.auth.getUserId() == params.id
             this.titleService.setTitle(`Groupomania - Profile de ${this.user.first_name} ${this.user.name}`);
-            if(this.auth.getUserId() == params.id || this.auth.getIsAdmin() == true) {
-              this.selfOrAdmin = true;
-            }
             this.profileForm = this.formBuilder.group({
               name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],
               first_name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]]
             })
           },
-          (error: any) => this.error = JSON.stringify(error)
+          (error: string) => this.error = JSON.stringify(error)
         )
         this.userService.getOne(params.id)
       },
-      (error: any) => this.error = JSON.stringify(error)
+      (error: string) => this.error = JSON.stringify(error)
     )
   }
 
@@ -58,36 +57,62 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   public onToggleUpdate() {
-    this.toggleUpdate = !this.toggleUpdate;
-    this.profileForm.controls["first_name"].setValue(this.user.first_name);
-    this.profileForm.controls["name"].setValue(this.user.name);
+    if(this.admin || this.self) {
+      this.toggleUpdate = !this.toggleUpdate;
+      this.profileForm.controls["first_name"].setValue(this.user.first_name);
+      this.profileForm.controls["name"].setValue(this.user.name);
+    }
+
   }
 
   public onSubmit() {
-    const name = this.profileForm.get('name').value;
-    const first_name = this.profileForm.get('first_name').value;
+    if(this.admin || this.self) {
+      const name = this.profileForm.get('name').value;
+      const first_name = this.profileForm.get('first_name').value;
 
-    if(this.profileForm.valid) {
-      this.userService.update(this.user.id, name, first_name)
-        .then(() => {
-          this.toggleUpdate = false;
-          this.profileForm.controls["first_name"].setValue(this.user.first_name);
-          this.profileForm.controls["name"].setValue(this.user.name);
-        })
-        .catch(() => this.error = "Une erreur est survenue")
+      if(this.profileForm.valid) {
+        this.userService.update(this.user.id, name, first_name)
+          .then(() => {
+            this.toggleUpdate = false;
+            this.profileForm.controls["first_name"].setValue(this.user.first_name);
+            this.profileForm.controls["name"].setValue(this.user.name);
+          })
+          .catch(() => this.error = "Une erreur est survenue")
+      }
     }
   }
 
   public async onDelete() {
-    this.userService.delete(this.user.id)
-      .then(() => {
-        if(this.user.id == this.auth.getUserId()) {
-          this.auth.logout()
-        }
-        else {
-          this.router.navigate(['/index']);
-        }
-      })
-      .catch(() => this.error = "Une erreur est survenue")
+    if(this.admin || this.self) {
+      this.userService.delete(this.user.id)
+        .then(() => {
+          if(this.user.id == this.auth.getUserId()) {
+            this.auth.logout()
+          }
+          else {
+            this.router.navigate(['/index']);
+          }
+        })
+        .catch(() => this.error = "Une erreur est survenue")
+    } 
+  }
+
+  public async onPromoteAdmin() {
+    if(this.admin && !this.user.admin) {
+      this.userService.promoteAdmin(this.user.id)
+        .catch(() => this.error = "Une erreur est survenue")
+    }
+  }
+
+  public async onRemoveAdmin() {
+    if(this.admin && !this.self) {
+      this.userService.removeAdmin(this.user.id)
+        .then(() => {
+          if(this.auth.getUserId() == this.user.id) {
+            this.auth.logout();
+          }
+        })
+        .catch(() => this.error = "Une erreur est survenue")
+    }
   }
 }
