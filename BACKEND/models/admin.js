@@ -9,7 +9,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Admin.init({
-    UserId: DataTypes.INTEGER
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+      onDelete: 'CASCADE',
+      hook: true,
+      references: {
+        model: "Users",
+        key: "id"
+      }
+    }
   }, {
     sequelize,
     modelName: 'Admin',

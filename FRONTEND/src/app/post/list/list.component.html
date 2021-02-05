@@ -1,10 +1,10 @@
-<p class="text-center w-100" *ngIf="posts && posts.length < 1">Rien n'a encore été posté... Sois le premier, <u class="text-primary pointer" routerLink="/create-post">créer un post</u> !</p>
+<p class="text-center w-100" *ngIf="posts && posts.length < 1">Rien n'a encore été posté... Sois le premier, <a routerLink="/create-post">créer un post</a> !</p>
 
-<a *ngFor="let post of posts" class="pointer card mb-3 p-2" style="height:10rem" [routerLink]="['/post/', post.id]">
+<a *ngFor="let post of posts" class="pointer card mb-3 p-2" [routerLink]="['/post/', post.id]">
     <div class="row g-0 h-100">
         <div class="col-md-2 d-flex flex-column justify-content-around align-items-center">
             <img src="assets/avatar.svg" alt="avatar" height="100rem">
-            <p class="mb-0">{{ post.User.name }} {{ post.User.first_name }}</p>
+            <p class="mb-0">{{ post.User.first_name | titlecase }} {{ post.User.name | uppercase }}</p>
         </div>
         <div class="col-md-10 h-100">
             <div class="card-body w-100">

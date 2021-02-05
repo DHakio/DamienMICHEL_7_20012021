@@ -9,9 +9,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Post.init({
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    UserId: DataTypes.INTEGER
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      hook: true,
+      references: {
+        model: 'Users',
+        key: 'id',
+      }
+    }
   }, {
     sequelize,
     modelName: 'Post',

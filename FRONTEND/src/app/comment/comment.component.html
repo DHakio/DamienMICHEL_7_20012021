@@ -16,7 +16,13 @@
             <label for="inputContent" class="visually-hidden">Commentaire</label>
             <input class="w-100 mb-3" id="inputContent" type="text" formControlName="content">
             <br>
-            <small>Posté le {{ comment.createdAt | date : 'dd/MM/yy à H:mm'}} <button class="text-danger" (click)="onToggleUpdate()">Annuler</button> - <button type="submit" class="text-success" (click)="onSubmit()">Enregistrer</button></small>
+            <small>
+                Posté le {{ comment.createdAt | date : 'dd/MM/yy à H:mm'}} 
+                <button class="text-danger" (click)="onToggleUpdate()">Annuler</button>
+                <span *ngIf="commentForm.valid"> 
+                    - <button type="submit" class="text-success" (click)="onSubmit()">Enregistrer</button>
+                </span>
+            </small>
         </form>  
     </div>
 </div>

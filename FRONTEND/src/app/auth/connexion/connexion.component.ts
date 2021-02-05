@@ -29,8 +29,12 @@ export class ConnexionComponent implements OnInit {
   onConnexion() {
     const email = this.connexionForm.get('email').value;
     const password = this.connexionForm.get('password').value;
-    this.auth.login(email, password)
-      .then(() => {this.router.navigate(['index'])})
-      .catch(() => this.error = "Identifiants incorrectes")
+
+    if(this.connexionForm.valid) {
+      this.auth.login(email, password)
+        .then(() => {this.router.navigate(['index'])})
+        .catch(() => this.error = "Identifiants incorrectes")
+    }
+
   }
 }

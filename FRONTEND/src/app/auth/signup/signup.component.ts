@@ -37,19 +37,23 @@ export class SignupComponent implements OnInit {
     const email = this.signupForm.get('email').value;
     const password = this.signupForm.get('password').value;
 
-    this.auth.signup(name, first_name, email, password)
-      .then(() => {
-        this.auth.login(email, password)
-          .then(() => {this.router.navigate(['index'])})
-          .catch((error) => this.error = error.message);
-      })
-      .catch(error => {
-        if(error.error.type == "unique violation") {
-          this.error = "Cette adresse email existe déjà !"
-        }
-        else {
-          this.error = "Une erreur est survenue"
-        }
-      })
+    if(this.signupForm.valid) {
+      this.auth.signup(name, first_name, email, password)
+        .then(() => {
+          this.auth.login(email, password)
+            .then(() => {this.router.navigate(['index'])})
+            .catch((error) => this.error = error.message);
+        })
+        .catch(error => {
+          if(error.error.type == "unique violation") {
+            this.error = "Cette adresse email existe déjà !"
+          }
+          else {
+            console.log(error)
+            this.error = "Une erreur est survenue"
+          }
+        })
+    }
+
   }
 }

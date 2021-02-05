@@ -21,8 +21,8 @@ export class AddPostComponent implements OnInit {
     this.titleService.setTitle("Groupomania - Création d'un post");
 
     this.addPostForm = this.formBuilder.group({
-      title: [null, Validators.required],
-      content: [null, Validators.required]
+      title: [null, [Validators.required, Validators.maxLength(10000)]],
+      content: [null, [Validators.required, Validators.maxLength(10000)]]
     });
   }
 
@@ -30,10 +30,14 @@ export class AddPostComponent implements OnInit {
     const title = this.addPostForm.get('title').value;
     const content = this.addPostForm.get('content').value;
 
-    this.postService.add(title, content).then(
-      (data: any) => {this.router.navigate(['/post/' + data.id]);}
-    )
-    .catch(() => this.error = "Une erreur est survenue");
+    if(this.addPostForm.valid) {
+      this.postService.add(title, content)
+        .then(
+          (data: any) => {this.router.navigate(['/post/' + data.id]);}
+        )
+        .catch(() => this.error = "Une erreur est survenue");
+    }
+
   }
 
 }

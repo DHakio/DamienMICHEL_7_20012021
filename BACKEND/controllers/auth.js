@@ -27,6 +27,7 @@ exports.signup = (request, response, next) => {
                 return response.status(201).json({message: "Utilisateur bien enregistré !"})
             })
             .catch(error => {
+                console.log('hum');
                 return response.status(400).json(error.errors[0]);
             });
         })

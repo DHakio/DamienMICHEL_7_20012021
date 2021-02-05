@@ -71,9 +71,21 @@ exports.update = (request, response, next) => {
     selfOrAdmin(request, "Post")
         .then(check => {
             if(check == "admin" || check == "self") {
-                models.Post.update({ ...request.body },{ where: {id: post_id }})
-                    .then(post => response.status(200).json({post: post}))
-                    .catch(error => response.status(500).json({error: error.message}));
+                if(request.body.title != "" && request.body.content != "") {
+                    models.Post.update({ ...request.body },{ where: {id: post_id }})
+                    .then(post => {
+                        return response.status(200).json({post: post})
+                    })
+                    .catch(error => {
+                        return response.status(500).json({error: error.message})
+                    });
+                }
+                else {
+                    return response.status(400).json({message: "Un des parametres est vide"})
+                }  
+            }
+            else {
+                return response.status(403).json({message: "Accès refusé."})
             }
         })
         .catch(error => response.status(500).json({error: error.message}));

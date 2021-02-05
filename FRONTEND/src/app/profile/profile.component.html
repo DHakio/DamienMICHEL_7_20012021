@@ -10,12 +10,18 @@
         </form>
     </div>
     <div class="d-flex justify-content-center" *ngIf="selfOrAdmin">
-        <div style="width: 12rem" class="d-flex justify-content-between">
-            <button class="btn btn-warning" (click)="onToggleUpdate()" *ngIf="!toggleUpdate">Modifier</button>
-            <button class="btn btn-danger" (click)="onDelete()" *ngIf="!toggleUpdate">Supprimer</button>
+        <div>
+            <div *ngIf="!toggleUpdate" style="width: 12rem" class="d-flex justify-content-between">
+                <button class="btn btn-warning" (click)="onToggleUpdate()">Modifier</button>
+                <button class="btn btn-danger" (click)="onDelete()">Supprimer</button>
+            </div>
+            <div *ngIf="toggleUpdate" style="width: 12rem" class="d-flex" 
+                [class.justify-content-between]="profileForm.valid"
+                [class.justify-content-center]="profileForm.invalid">
+                <button class="btn btn-success" (click)="onSubmit()" *ngIf="profileForm.valid">Enregistrer</button>
+                <button class="btn btn-danger" (click)="onToggleUpdate()">Annuler</button>
+            </div>
 
-            <button class="btn btn-success" (click)="onSubmit()" *ngIf="toggleUpdate">Enregistrer</button>
-            <button class="btn btn-danger" (click)="onToggleUpdate()" *ngIf="toggleUpdate">Annuler</button>
         </div> 
     </div>    
 </div>

@@ -2,12 +2,32 @@
     <form [formGroup]="addPostForm">
         <h1 class="h3 mb-3 text-center">Nouveau Post</h1>
 
-        <label for="inputTitle" class="mb-2"><h2 class="h4">Titre du post</h2></label>
-        <input type="text" id="inputTitle" class="form-control mb-4" placeholder="Mon super titre" formControlName="title" required autofocus>
+        <label for="inputTitle">
+            <h2 class="h4">Titre du post</h2>
+        </label>
+        <input type="text" id="inputTitle" class="form-control" placeholder="Mon super titre" formControlName="title">
+        <div class="text-danger text-center" *ngIf="addPostForm.invalid && addPostForm.get('title').errors && (addPostForm.get('title').dirty || addPostForm.get('title').touched)">
+            <small *ngIf="addPostForm.get('title').hasError('required')">
+                Vous devez donner un titre à votre post
+            </small>
+            <small *ngIf="addPostForm.get('title').hasError('maxlength')">
+                Un titre ne doit pas faire plus de 255 caractères
+            </small>
+        </div> 
 
-        <label for="inputContent"><h2 class="h4">Contenu du post</h2></label>
-        <textarea class="form-control mb-4" id="inputContent" rows="10" formControlName="content"></textarea>
+        <label for="inputContent" class="mt-4">
+            <h2 class="h4">Contenu du post</h2>
+        </label>
+        <textarea class="form-control" id="inputContent" rows="10" formControlName="content"></textarea>
+        <div class="text-danger text-center" *ngIf="addPostForm.invalid && addPostForm.get('content').errors && (addPostForm.get('content').dirty || addPostForm.get('content').touched)">
+            <small *ngIf="addPostForm.get('content').hasError('required')">
+                Vous devez ajouter du contenu dans votre post
+            </small>
+            <small *ngIf="addPostForm.get('content').hasError('maxlength')">
+                Votre post ne doit pas faire plu de 10 000 caractères
+            </small>
+        </div> 
 
-        <button class="btn btn-lg btn-dark" type="submit" [disabled]="addPostForm.invalid" (click)="onSubmit()">Enregistrer</button>
+        <button class="btn btn-lg btn-dark mt-4" type="submit" [disabled]="addPostForm.invalid" (click)="onSubmit()">Enregistrer</button>
     </form>
 </div>

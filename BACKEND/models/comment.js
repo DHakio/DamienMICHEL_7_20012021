@@ -9,9 +9,30 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Comment.init({
-    content: DataTypes.STRING,
-    UserId: DataTypes.INTEGER,
-    PostId: DataTypes.INTEGER
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      hook: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    PostId: {
+      type:DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      hook: true,
+      references: {
+        model: 'Posts',
+        key: 'id',
+      }
+    }
   }, {
     sequelize,
     modelName: 'Comment',

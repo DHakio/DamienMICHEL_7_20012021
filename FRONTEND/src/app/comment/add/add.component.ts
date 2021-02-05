@@ -19,7 +19,7 @@ export class addCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.commentForm = this.formBuilder.group(
-      {content: [null, Validators.required] }
+      {content: [null, [Validators.required, Validators.maxLength(255)]] }
     )
 
     this.route.params.subscribe(
@@ -34,12 +34,16 @@ export class addCommentComponent implements OnInit {
 
   public async onSubmit() {
     const content = this.commentForm.get('content').value;
-    this.postService.addComment(this.post_id, content)
-      .then((message: string) => {
-        this.success = message;
-        this.commentForm.reset();
-      })
-      .catch(() => this.error = "Une erreur est survenue");
+
+    if(this.commentForm.valid) {
+      this.postService.addComment(this.post_id, content)
+        .then((message: string) => {
+          this.success = message;
+          this.commentForm.reset();
+        })
+        .catch(() => this.error = "Une erreur est survenue");
+    }
+
   }
 
 }

@@ -44,8 +44,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
               name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],
               first_name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]]
             })
-            this.profileForm.controls["first_name"].setValue(this.user.first_name);
-            this.profileForm.controls["name"].setValue(this.user.name);
           },
           (error: any) => this.error = JSON.stringify(error)
         )
@@ -61,19 +59,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   public onToggleUpdate() {
     this.toggleUpdate = !this.toggleUpdate;
+    this.profileForm.controls["first_name"].setValue(this.user.first_name);
+    this.profileForm.controls["name"].setValue(this.user.name);
   }
 
   public onSubmit() {
     const name = this.profileForm.get('name').value;
     const first_name = this.profileForm.get('first_name').value;
 
-    this.userService.update(this.user.id, name, first_name)
-      .then(() => {
-        this.toggleUpdate = false;
-        this.profileForm.controls["first_name"].setValue(this.user.first_name);
-        this.profileForm.controls["name"].setValue(this.user.name);
-      })
-      .catch(() => this.error = "Une erreur est survenue")
+    if(this.profileForm.valid) {
+      this.userService.update(this.user.id, name, first_name)
+        .then(() => {
+          this.toggleUpdate = false;
+          this.profileForm.controls["first_name"].setValue(this.user.first_name);
+          this.profileForm.controls["name"].setValue(this.user.name);
+        })
+        .catch(() => this.error = "Une erreur est survenue")
+    }
   }
 
   public async onDelete() {

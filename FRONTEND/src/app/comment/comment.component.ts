@@ -26,7 +26,6 @@ export class CommentComponent implements OnInit {
     this.commentForm = this.formBuilder.group(
       {content: [null, Validators.required] }
     )
-    this.commentForm.controls["content"].setValue(this.comment.content);
 
     if(this.auth.getIsAdmin() || this.auth.getUserId() == this.comment.UserId) {
       this.selfOrAdmin = true;
@@ -44,6 +43,7 @@ export class CommentComponent implements OnInit {
 
   public async onToggleUpdate() {
     this.toggleUpdate = !this.toggleUpdate;
+    this.commentForm.controls["content"].setValue(this.comment.content);
 
   }
 

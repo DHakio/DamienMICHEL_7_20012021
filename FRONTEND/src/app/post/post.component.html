@@ -1,10 +1,12 @@
 <h1 class="text-center" *ngIf="error">{{ error }}</h1>
 
 <div *ngIf="post && post !== undefined && !error">
-    <a [routerLink]="['/profile', post.User.id]" class="col-md-2 d-flex flex-column justify-content-around align-items-center w-100 mb-4 mt-4">
-        <img src="assets/avatar.svg" alt="avatar" height="100rem">
-        <p class="mb-0">{{ post.User.name | uppercase }} {{ post.User.first_name }}</p>
-    </a>
+    <div class="col-md-2 d-flex flex-column justify-content-around align-items-center w-100 mb-4 mt-4">
+        <a [routerLink]="['/profile', post.User.id]">
+            <img src="assets/avatar.svg" alt="avatar" height="100rem">
+            <p class="mb-0">{{ post.User.first_name | titlecase }} {{ post.User.name | uppercase }}</p>
+        </a>
+    </div>
 
     <div class="card text-center mb-3" *ngIf="!toggleUpdate">
         <!-- SHOW POST -->
@@ -33,18 +35,29 @@
         <form [formGroup]="postForm">
             <div class="card-header d-flex flex-column">
                 <label for="inputTitle" class="visually-hidden">Titre</label>
-                <input class="h3 w-100 text-center" type="text" formControlName="title">
+                <input class="h3 w-100 text-center form-control" type="text" formControlName="title">
+                <div *ngIf="postForm.get('title').invalid && (postForm.get('title').dirty || postForm.get('title').touched)">
+                    <small class="text-danger" *ngIf="postForm.get('title').hasError('required')">Vous devez renseigner un titre</small>
+                    <small class="text-danger" *ngIf="postForm.get('title').hasError('maxLength')">Le titre ne peut pas faire plus de 50 caractères</small>
+                </div>
+
+                <div *ngIf="postForm.get('content').invalid && (postForm.get('content').dirty || postForm.get('content').touched)">
+                    <small class="text-danger" *ngIf="postForm.get('content').hasError('required')">Vous devez écrire du contenu dans votre post</small>
+                    <small class="text-danger" *ngIf="postForm.get('content').hasError('maxLength')">Le post ne peut pas faire plus de 10 000 caractères</small>
+                </div>
+            
                 <div class="d-flex justify-content-center col-md-12">
                     <p class="text-success col-md-1 mb-0">
                         <span class="pointer text-danger" (click)="onToggleUpdate()"> Annuler</span>
                     </p>
-                    <p class="text-danger col-md-1 mb-0">
+                    <p class="text-danger col-md-1 mb-0" *ngIf="postForm.valid">
                         <span class="pointer text-success" (click)="onSubmit()">Enregistrer</span>
                     </p>
                 </div>
             </div>
             <div class="card-body">
-                <textarea class="w-100" rows="15" formControlName="content">
+                <label for="inputContent" class="visually-hidden">Titre</label>
+                <textarea id="inputContent" class="w-100 form-control" rows="15" formControlName="content">
                 </textarea>
             </div>
             <div class="card-footer text-muted">

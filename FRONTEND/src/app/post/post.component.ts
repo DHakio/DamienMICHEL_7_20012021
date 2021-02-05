@@ -40,11 +40,9 @@ export class PostComponent implements OnInit, OnDestroy {
             this.titleService.setTitle("Groupomania - " + this.post.title);
 
             this.postForm = this.formBuilder.group({
-              title: [null, Validators.required],
-              content: [null, Validators.required]
+              title: [null, [Validators.required, Validators.maxLength(50)]],
+              content: [null, [Validators.required, Validators.maxLength(10000)]]
             });
-            this.postForm.controls["title"].setValue(this.post.title);
-            this.postForm.controls["content"].setValue(this.post.content);
 
             if(this.post.createdAt != this.post.updatedAt) {
               this.edited = this.post.updatedAt;
@@ -63,18 +61,20 @@ export class PostComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   public async onSubmit() {
     const title = this.postForm.get('title').value;
     const content = this.postForm.get('content').value;
 
-    this.postService.update(this.post.id, title, content)
-      .then(() => {
-        this.toggleUpdate = false;
-        this.postForm.controls["title"].setValue(this.post.title);
-        this.postForm.controls["content"].setValue(this.post.content);
-      })
-      .catch(() => this.error = "Une erreur est survenue")
+    if(this.postForm.valid) {
+      this.postService.update(this.post.id, title, content)
+        .then(() => {
+          this.toggleUpdate = false;
+          this.postForm.controls["title"].setValue(this.post.title);
+          this.postForm.controls["content"].setValue(this.post.content);
+        })
+        .catch(() => this.error = "Une erreur est survenue")
+    }
   }
   
   public async onDelete() {
@@ -84,6 +84,8 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public onToggleUpdate() {
+    this.postForm.controls["title"].setValue(this.post.title);
+    this.postForm.controls["content"].setValue(this.post.content);
     this.toggleUpdate = !this.toggleUpdate;
   }
   
