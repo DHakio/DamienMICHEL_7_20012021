@@ -62,9 +62,10 @@ export class PostService {
   public async update(id: number, title: string, content: string) {
     return new Promise((resolve, reject) => {
       this.http.put('http://localhost:3000/api/post/' + id, {title: title, content: content}).subscribe(
-        (data: string) => {
+        (id: number) => {
+          console.log(id);
           this.getOne(id)
-            .then(() => resolve(data))
+            .then((post: Post) => resolve(post))
             .catch((error: any) => reject(error))
         },
         (error: any) => {

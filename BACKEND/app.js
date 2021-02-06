@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-
+const path = require('path');
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/post');
 const adminRoutes = require('./routes/admin');
@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 ENCODING_KEY = 'Th0XoASuEcAuX4LEoDWxRUtFK2V42b';
 
 app.use(bodyParser.json());
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);

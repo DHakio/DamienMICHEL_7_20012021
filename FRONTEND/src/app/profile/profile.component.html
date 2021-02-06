@@ -1,13 +1,19 @@
 <div *ngIf="user">
     <div class="d-flex flex-column align-items-center justify-content-center">
-        <img class="card-img-top" style="width: 18rem;" src="assets/avatar.svg" alt="avatar de {{ user.first_name }}">
+        <img class="card-img-top" style="width: 18rem;" [src]="user.avatar" alt="avatar de {{ user.first_name }}">
         <h1 class="text-center my-3 h1" *ngIf="!toggleUpdate">{{ user.first_name | titlecase }} {{ user.name | uppercase }}</h1>
-        <form [formGroup]="profileForm" *ngIf="toggleUpdate" class="d-flex my-3">
-            <label for="inputFirstName" class="visually-hidden"></label>
-            <input class="form-control" id="inputFirstName" formControlName="first_name">
-            <label for="inputName" class="visually-hidden"></label>
-            <input class="form-control" id="inputName" formControlName="name">
+
+        <form [formGroup]="profileForm" *ngIf="toggleUpdate" class="d-flex flex-column align-items-center mb-3">
+            <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput accept="image/png, image/jpeg">
+            <button class="btn btn-light mt-2" (click)="fileInput.click()">Changer son avatar</button>
+            <div class="d-flex mt-3">
+                <label for="inputFirstName" class="visually-hidden"></label>
+                <input class="form-control" id="inputFirstName" formControlName="first_name">
+                <label for="inputName" class="visually-hidden"></label>
+                <input class="form-control" id="inputName" formControlName="name">
+            </div>
         </form>
+
     </div>
     <div class="d-flex justify-content-center" *ngIf="self || admin">
         <div>
@@ -19,6 +25,7 @@
                 <button class="btn btn-warning" (click)="onToggleUpdate()">Modifier</button>
                 <button class="btn btn-danger" (click)="onDelete()">Supprimer</button>
             </div>
+
             <div *ngIf="toggleUpdate" style="width: 12rem" class="d-flex" 
                 [class.justify-content-between]="profileForm.valid"
                 [class.justify-content-center]="profileForm.invalid">

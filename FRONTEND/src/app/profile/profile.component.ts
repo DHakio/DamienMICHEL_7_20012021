@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -22,6 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   admin: boolean;
   toggleUpdate: boolean;
   profileForm: FormGroup;
+  avatar: File;
 
   constructor(private route: ActivatedRoute, 
               private userService: UserService, 
@@ -41,7 +41,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.titleService.setTitle(`Groupomania - Profile de ${this.user.first_name} ${this.user.name}`);
             this.profileForm = this.formBuilder.group({
               name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],
-              first_name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]]
+              first_name: [null, [Validators.required, Validators.pattern("^[a-zA-Z\- ']+$"), Validators.maxLength(20)]],
+              avatar: [null]
             })
           },
           (error: string) => this.error = JSON.stringify(error)
@@ -65,13 +66,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   }
 
-  public onSubmit() {
+  public onFileChanged(event) {
+    this.avatar = event.target.files[0];
+  }
+
+  public async onSubmit() {
     if(this.admin || this.self) {
       const name = this.profileForm.get('name').value;
       const first_name = this.profileForm.get('first_name').value;
 
       if(this.profileForm.valid) {
-        this.userService.update(this.user.id, name, first_name)
+        this.userService.update(this.user.id, name, first_name, this.avatar)
           .then(() => {
             this.toggleUpdate = false;
             this.profileForm.controls["first_name"].setValue(this.user.first_name);
@@ -86,7 +91,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if(this.admin || this.self) {
       this.userService.delete(this.user.id)
         .then(() => {
-          if(this.user.id == this.auth.getUserId()) {
+          if(this.self) {
             this.auth.logout()
           }
           else {

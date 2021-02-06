@@ -35,6 +35,12 @@ module.exports = (sequelize, DataTypes) => {
       isEmail: true
       }
     },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      is: /^[http://localhost:3000/images/avatars/]/,
+      defaultValue: "http://localhost:3000/images/avatars/default.png",
+    }
   }, {
     sequelize,
     modelName: 'User',

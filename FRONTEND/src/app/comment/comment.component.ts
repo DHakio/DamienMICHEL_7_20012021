@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Comment } from '../models/Comment.model';
 import { AuthService } from '../services/auth.service';
 import { PostService } from '../services/post.service';

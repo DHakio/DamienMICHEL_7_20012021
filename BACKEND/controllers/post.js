@@ -29,7 +29,7 @@ exports.getAll = (request, response, next) => {
     models.Post.findAll({
         order: [['id', 'DESC']],
         include: [
-            {model: models.User, attributes: ['id', 'name', 'first_name']},
+            {model: models.User, attributes: ['id', 'name', 'first_name', 'avatar']},
             models.Comment
         ]
         })
@@ -50,8 +50,8 @@ exports.getOne = (request, response, next) => {
     models.Post.findOne({ 
         where: {id: post_id},
         include: [
-            {model: models.User, attributes: ['id', 'name', 'first_name']},
-            {model: models.Comment, include: {model: models.User, attributes: ['id', 'name', 'first_name']}}
+            {model: models.User, attributes: ['id', 'name', 'first_name', 'avatar']},
+            {model: models.Comment, include: {model: models.User, attributes: ['id', 'name', 'first_name', 'avatar']}}
         ]
     })
         .then(post => response.status(200).json(post))
@@ -60,7 +60,7 @@ exports.getOne = (request, response, next) => {
 
 exports.update = (request, response, next) => {
     // Request : {title: String?, content: String?}
-    // Response : Post
+    // Response : Post.id: number
 
     let post_id = request.params.id;
 
@@ -73,12 +73,8 @@ exports.update = (request, response, next) => {
             if(check == "admin" || check == "self") {
                 if(request.body.title != "" && request.body.content != "") {
                     models.Post.update({ ...request.body },{ where: {id: post_id }})
-                    .then(post => {
-                        return response.status(200).json(post)
-                    })
-                    .catch(error => {
-                        return response.status(500).json(error)
-                    });
+                    .then(() => response.status(200).json(post_id))
+                    .catch(error => response.status(500).json(error));
                 }
                 else {
                     return response.status(400).json("Un des parametres est vide")

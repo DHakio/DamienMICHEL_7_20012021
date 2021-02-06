@@ -1,6 +1,6 @@
 <div class="d-flex mb-3">
     <a [routerLink]="['/profile', comment.UserId]" class="col-md-2 d-flex flex-column align-items-center justify-content-center">
-        <img src="assets/avatar.svg" alt="avatar" height="50rem">
+        <img [src]="comment.User.avatar" alt="avatar de {{ comment.User.first_name }}" height="50rem" width="50rem">
         <p class="mb-0">{{ comment.User.first_name }} {{ comment.User.name }}</p>
     </a>
     <div *ngIf="!toggleUpdate" class="card p-3">

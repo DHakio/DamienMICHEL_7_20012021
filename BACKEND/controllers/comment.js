@@ -60,7 +60,11 @@ exports.update = (request, response, next) => {
         .then(check => {
             if(check == "admin" || check == "self") {
                 models.Comment.update({ ...request.body },{ where: {id: comment_id }})
-                    .then(comment => response.status(200).json(comment.PostId))
+                    .then(() => {
+                        models.Comment.findOne({where: {id: comment_id}})
+                            .then(comment => response.status(200).json(comment.PostId))
+                            .catch(error => response.status(500).json(error));
+                    })
                     .catch(error => response.status(500).json(error));
             }
         })

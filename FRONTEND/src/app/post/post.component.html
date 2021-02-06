@@ -1,11 +1,9 @@
 <h1 class="text-center" *ngIf="error">{{ error }}</h1>
 
 <div *ngIf="post && post !== undefined && !error">
-    <div class="col-md-2 d-flex flex-column justify-content-around align-items-center w-100 mb-4 mt-4">
-        <a [routerLink]="['/profile', post.User.id]">
-            <img src="assets/avatar.svg" alt="avatar" height="100rem">
-            <p class="mb-0">{{ post.User.first_name | titlecase }} {{ post.User.name | uppercase }}</p>
-        </a>
+    <div class="col-md-2 w-100 my-4 d-flex flex-column align-items-center">
+        <img [src]="post.User.avatar" alt="avatar" height="120rem" width="120rem">
+        <a class="" [routerLink]="['/profile', post.User.id]">{{ post.User.first_name | titlecase }} {{ post.User.name | uppercase }}</a>
     </div>
 
     <div class="card text-center mb-3" *ngIf="!toggleUpdate">

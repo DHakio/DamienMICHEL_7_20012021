@@ -20,24 +20,26 @@ export class UserService {
   public async getOne(id: number) {
     return new Promise((resolve, reject) => {
       this.http.get('http://localhost:3000/api/user/' + id).subscribe(
-        (data: User) => {
-          this.users = data;
-            this.emitUserSubject();
-            resolve(this.users);
+        (user: User) => {
+          this.users = user;
+          this.emitUserSubject();
+          resolve(this.users);
         },
         (error: any) => reject(error)
       )
     })
   }
 
-  public async update(id: number, name: string, first_name: string) {
+  public async update(id: number, name: string, first_name: string, avatar: File = null) {
     return new Promise((resolve, reject) => {
-      this.http.put('http://localhost:3000/api/user/' + id, {name: name, first_name: first_name}).subscribe(
-        (data: string) => {
+      const formData = new FormData();
+      formData.append('user', JSON.stringify({name: name, first_name: first_name}));
+      formData.append('avatar', avatar)
+      this.http.put('http://localhost:3000/api/user/' + id, formData).subscribe(
+        (id: number) => {
           this.getOne(id)
-            .then(() => resolve(data))
-            .catch((error: any) => reject(error)
-          )
+          .then((user: User) => resolve(user))
+          .catch((error: any) => reject(error))
         },
         (error: string) => reject(error)
       )
@@ -79,6 +81,5 @@ export class UserService {
       )
     })
   }
-
 
 }
