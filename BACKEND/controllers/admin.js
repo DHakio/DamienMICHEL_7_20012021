@@ -3,14 +3,14 @@ const models = require('../models');
 
 
 exports.create = (request, response, next) => {
-    // Request : null
+    // Request : {userId : number}
     // Response : Admin
-    let user_id = request.params.id;
+    let user_id = request.body.userId;
 
     if(user_id == null || isNaN(user_id) ) {
         return response.status(400).json({message: "Aucun ID n'a été envoyé"})
     }
-
+    
     selfOrAdmin(request)
         .then(check => {
             if(check == "admin") {
